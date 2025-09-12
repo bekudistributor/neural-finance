@@ -14,25 +14,62 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { formatCurrency } from "@/lib/utils";
 
+// TODO: Replace with Supabase data fetching
 const revenueData = [
-  { month: "Jan", revenue: 4000, expenses: 2400 },
-  { month: "Feb", revenue: 3000, expenses: 1398 },
-  { month: "Mar", revenue: 2000, expenses: 2000 },
-  { month: "Apr", revenue: 2780, expenses: 1908 },
-  { month: "May", revenue: 1890, expenses: 2800 },
-  { month: "Jun", revenue: 2390, expenses: 2000 },
-  { month: "Jul", revenue: 3490, expenses: 2100 },
+  // Empty array - will be populated from Supabase
 ];
 
 const expenseCategories = [
-  { name: "Office Supplies", value: 400, color: "hsl(45, 100%, 50%)" },
-  { name: "Marketing", value: 300, color: "hsl(142, 76%, 36%)" },
-  { name: "Software", value: 300, color: "hsl(0, 84%, 60%)" },
-  { name: "Travel", value: 200, color: "hsl(0, 0%, 45%)" },
+  // Empty array - will be populated from Supabase
 ];
 
 export const FinancialOverview = () => {
+  // TODO: Fetch data from Supabase
+  const isLoading = true; // Set to false when data is loaded
+  const hasData = revenueData.length > 0 && expenseCategories.length > 0;
+
+  if (isLoading) {
+    return (
+      <Card className="border-border bg-card">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-card-foreground">
+            Financial Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80 flex items-center justify-center">
+            <div className="text-center space-y-2">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+              <p className="text-sm text-muted-foreground">Loading financial data...</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!hasData) {
+    return (
+      <Card className="border-border bg-card">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-card-foreground">
+            Financial Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80 flex items-center justify-center">
+            <div className="text-center space-y-2">
+              <p className="text-muted-foreground">No financial data available yet</p>
+              <p className="text-sm text-muted-foreground">Add some transactions to see your overview</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="border-border bg-card">
       <CardHeader>
@@ -42,17 +79,17 @@ export const FinancialOverview = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="revenue" className="w-full">
-          <TabsList className="mb-4 bg-muted">
-            <TabsTrigger value="revenue" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+          <TabsList className="mb-4 bg-muted w-full sm:w-auto">
+            <TabsTrigger value="revenue" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex-1 sm:flex-initial">
               Revenue & Expenses
             </TabsTrigger>
-            <TabsTrigger value="expenses" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsTrigger value="expenses" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex-1 sm:flex-initial">
               Expense Categories
             </TabsTrigger>
           </TabsList>
           
           <TabsContent value="revenue" className="space-y-4">
-            <div className="h-80">
+            <div className="h-60 sm:h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={revenueData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -64,6 +101,7 @@ export const FinancialOverview = () => {
                   <YAxis 
                     stroke="hsl(var(--muted-foreground))"
                     tick={{ fontSize: 12 }}
+                    tickFormatter={(value) => formatCurrency(value)}
                   />
                   <Tooltip 
                     contentStyle={{
@@ -72,6 +110,7 @@ export const FinancialOverview = () => {
                       borderRadius: "var(--radius)",
                       color: "hsl(var(--card-foreground))"
                     }}
+                    formatter={(value) => [formatCurrency(Number(value))]}
                   />
                   <Line 
                     type="monotone" 
@@ -93,7 +132,7 @@ export const FinancialOverview = () => {
           </TabsContent>
           
           <TabsContent value="expenses" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="h-60">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -117,6 +156,7 @@ export const FinancialOverview = () => {
                         borderRadius: "var(--radius)",
                         color: "hsl(var(--card-foreground))"
                       }}
+                      formatter={(value) => [formatCurrency(Number(value))]}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -128,13 +168,13 @@ export const FinancialOverview = () => {
                   <div key={category.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div 
-                        className="h-3 w-3 rounded"
+                        className="h-3 w-3 rounded flex-shrink-0"
                         style={{ backgroundColor: category.color }}
                       />
-                      <span className="text-sm text-muted-foreground">{category.name}</span>
+                      <span className="text-sm text-muted-foreground truncate">{category.name}</span>
                     </div>
                     <span className="text-sm font-medium text-card-foreground">
-                      ${category.value}
+                      {formatCurrency(category.value)}
                     </span>
                   </div>
                 ))}
