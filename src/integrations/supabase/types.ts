@@ -16,165 +16,164 @@ export type Database = {
     Tables: {
       accounts: {
         Row: {
-          code: string
+          code: string | null
           created_at: string | null
+          description: string | null
           id: string
           name: string
-          type: string
-          updated_at: string | null
+          type: Database["public"]["Enums"]["account_type"]
           user_id: string | null
         }
         Insert: {
-          code: string
+          code?: string | null
           created_at?: string | null
+          description?: string | null
           id?: string
           name: string
-          type: string
-          updated_at?: string | null
+          type: Database["public"]["Enums"]["account_type"]
           user_id?: string | null
         }
         Update: {
-          code?: string
+          code?: string | null
           created_at?: string | null
+          description?: string | null
           id?: string
           name?: string
-          type?: string
-          updated_at?: string | null
+          type?: Database["public"]["Enums"]["account_type"]
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "accounts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       audit_logs: {
         Row: {
           action: string
-          changed_at: string | null
+          created_at: string
           id: string
-          new_data: Json | null
-          old_data: Json | null
+          new_values: Json | null
+          old_values: Json | null
           record_id: string
           table_name: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           action: string
-          changed_at?: string | null
+          created_at?: string
           id?: string
-          new_data?: Json | null
-          old_data?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
           record_id: string
           table_name: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           action?: string
-          changed_at?: string | null
+          created_at?: string
           id?: string
-          new_data?: Json | null
-          old_data?: Json | null
+          new_values?: Json | null
+          old_values?: Json | null
           record_id?: string
           table_name?: string
-          user_id?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "audit_logs_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       bill_lines: {
         Row: {
-          bill_id: string | null
+          bill_id: string
           description: string
+          expense_account_id: string
           id: string
-          line_total: number
           quantity: number
+          total_amount: number
           unit_price: number
         }
         Insert: {
-          bill_id?: string | null
+          bill_id: string
           description: string
+          expense_account_id: string
           id?: string
-          line_total: number
-          quantity: number
-          unit_price: number
+          quantity?: number
+          total_amount?: number
+          unit_price?: number
         }
         Update: {
-          bill_id?: string | null
+          bill_id?: string
           description?: string
+          expense_account_id?: string
           id?: string
-          line_total?: number
           quantity?: number
+          total_amount?: number
           unit_price?: number
         }
         Relationships: [
           {
-            foreignKeyName: "bill_lines_bill_id_fkey"
+            foreignKeyName: "fk_bill_lines_bill_id"
             columns: ["bill_id"]
             isOneToOne: false
             referencedRelation: "bills"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_bill_lines_expense_account_id"
+            columns: ["expense_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
             referencedColumns: ["id"]
           },
         ]
       }
       bills: {
         Row: {
-          bill_number: string
-          created_at: string | null
-          due_date: string
+          bill_number: string | null
+          created_at: string
+          date: string
+          due_date: string | null
           id: string
-          issue_date: string
+          notes: string | null
+          paid_amount: number
           status: string
+          subtotal: number
+          tax_amount: number
           total_amount: number
-          updated_at: string | null
-          user_id: string | null
-          vendor_id: string | null
+          updated_at: string
+          user_id: string
+          vendor_id: string
         }
         Insert: {
-          bill_number: string
-          created_at?: string | null
-          due_date: string
+          bill_number?: string | null
+          created_at?: string
+          date?: string
+          due_date?: string | null
           id?: string
-          issue_date: string
+          notes?: string | null
+          paid_amount?: number
           status?: string
-          total_amount: number
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+          user_id: string
+          vendor_id: string
         }
         Update: {
-          bill_number?: string
-          created_at?: string | null
-          due_date?: string
+          bill_number?: string | null
+          created_at?: string
+          date?: string
+          due_date?: string | null
           id?: string
-          issue_date?: string
+          notes?: string | null
+          paid_amount?: number
           status?: string
+          subtotal?: number
+          tax_amount?: number
           total_amount?: number
-          updated_at?: string | null
-          user_id?: string | null
-          vendor_id?: string | null
+          updated_at?: string
+          user_id?: string
+          vendor_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "bills_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bills_vendor_id_fkey"
+            foreignKeyName: "fk_bills_vendor_id"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
@@ -185,157 +184,173 @@ export type Database = {
       customers: {
         Row: {
           address: string | null
-          created_at: string | null
+          created_at: string
+          customer_type: string
           email: string | null
           id: string
           name: string
           phone: string | null
-          updated_at: string | null
-          user_id: string | null
+          updated_at: string
+          user_id: string
         }
         Insert: {
           address?: string | null
-          created_at?: string | null
+          created_at?: string
+          customer_type?: string
           email?: string | null
           id?: string
           name: string
           phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          updated_at?: string
+          user_id: string
         }
         Update: {
           address?: string | null
-          created_at?: string | null
+          created_at?: string
+          customer_type?: string
           email?: string | null
           id?: string
           name?: string
           phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "customers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       invoice_lines: {
         Row: {
           description: string
           id: string
-          invoice_id: string | null
-          line_total: number
+          invoice_id: string
           quantity: number
+          revenue_account_id: string
+          total_amount: number
           unit_price: number
         }
         Insert: {
           description: string
           id?: string
-          invoice_id?: string | null
-          line_total: number
-          quantity: number
-          unit_price: number
+          invoice_id: string
+          quantity?: number
+          revenue_account_id: string
+          total_amount?: number
+          unit_price?: number
         }
         Update: {
           description?: string
           id?: string
-          invoice_id?: string | null
-          line_total?: number
+          invoice_id?: string
           quantity?: number
+          revenue_account_id?: string
+          total_amount?: number
           unit_price?: number
         }
         Relationships: [
           {
-            foreignKeyName: "invoice_lines_invoice_id_fkey"
+            foreignKeyName: "fk_invoice_lines_invoice_id"
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_invoice_lines_revenue_account_id"
+            columns: ["revenue_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
             referencedColumns: ["id"]
           },
         ]
       }
       invoices: {
         Row: {
-          created_at: string | null
-          customer_id: string | null
-          due_date: string
+          created_at: string
+          customer_id: string
+          date: string
+          due_date: string | null
           id: string
           invoice_number: string
-          issue_date: string
+          notes: string | null
+          paid_amount: number
           status: string
+          subtotal: number
+          tax_amount: number
           total_amount: number
-          updated_at: string | null
-          user_id: string | null
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
-          customer_id?: string | null
-          due_date: string
+          created_at?: string
+          customer_id: string
+          date?: string
+          due_date?: string | null
           id?: string
           invoice_number: string
-          issue_date: string
+          notes?: string | null
+          paid_amount?: number
           status?: string
-          total_amount: number
-          updated_at?: string | null
-          user_id?: string | null
+          subtotal?: number
+          tax_amount?: number
+          total_amount?: number
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          created_at?: string | null
-          customer_id?: string | null
-          due_date?: string
+          created_at?: string
+          customer_id?: string
+          date?: string
+          due_date?: string | null
           id?: string
           invoice_number?: string
-          issue_date?: string
+          notes?: string | null
+          paid_amount?: number
           status?: string
+          subtotal?: number
+          tax_amount?: number
           total_amount?: number
-          updated_at?: string | null
-          user_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "invoices_customer_id_fkey"
+            foreignKeyName: "fk_invoices_customer_id"
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "invoices_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
       journal_entries: {
         Row: {
-          account_id: string | null
-          created_at: string | null
-          credit: number
-          debit: number
+          account_id: string
+          credit: number | null
+          date: string
+          debit: number | null
+          description: string | null
           id: string
-          transaction_id: string | null
+          transaction_id: string
+          user_id: string
         }
         Insert: {
-          account_id?: string | null
-          created_at?: string | null
-          credit?: number
-          debit?: number
+          account_id: string
+          credit?: number | null
+          date: string
+          debit?: number | null
+          description?: string | null
           id?: string
-          transaction_id?: string | null
+          transaction_id: string
+          user_id: string
         }
         Update: {
-          account_id?: string | null
-          created_at?: string | null
-          credit?: number
-          debit?: number
+          account_id?: string
+          credit?: number | null
+          date?: string
+          debit?: number | null
+          description?: string | null
           id?: string
-          transaction_id?: string | null
+          transaction_id?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -358,53 +373,104 @@ export type Database = {
         Row: {
           amount: number
           bill_id: string | null
-          created_at: string | null
+          created_at: string
+          date: string
           id: string
           invoice_id: string | null
-          payment_date: string
-          payment_method: string | null
-          user_id: string | null
+          notes: string | null
+          payment_account_id: string
+          payment_method: string
+          payment_type: string
+          reference: string | null
+          user_id: string
         }
         Insert: {
           amount: number
           bill_id?: string | null
-          created_at?: string | null
+          created_at?: string
+          date?: string
           id?: string
           invoice_id?: string | null
-          payment_date: string
-          payment_method?: string | null
-          user_id?: string | null
+          notes?: string | null
+          payment_account_id: string
+          payment_method?: string
+          payment_type: string
+          reference?: string | null
+          user_id: string
         }
         Update: {
           amount?: number
           bill_id?: string | null
-          created_at?: string | null
+          created_at?: string
+          date?: string
           id?: string
           invoice_id?: string | null
-          payment_date?: string
-          payment_method?: string | null
-          user_id?: string | null
+          notes?: string | null
+          payment_account_id?: string
+          payment_method?: string
+          payment_type?: string
+          reference?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "payments_bill_id_fkey"
+            foreignKeyName: "fk_payments_bill_id"
             columns: ["bill_id"]
             isOneToOne: false
             referencedRelation: "bills"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "payments_invoice_id_fkey"
+            foreignKeyName: "fk_payments_invoice_id"
             columns: ["invoice_id"]
             isOneToOne: false
             referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "payments_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "fk_payments_payment_account_id"
+            columns: ["payment_account_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_items: {
+        Row: {
+          amount: number
+          description: string
+          expense_account_id: string
+          id: string
+          transaction_id: string
+        }
+        Insert: {
+          amount: number
+          description: string
+          expense_account_id: string
+          id?: string
+          transaction_id: string
+        }
+        Update: {
+          amount?: number
+          description?: string
+          expense_account_id?: string
+          id?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_items_expense_account_id_fkey"
+            columns: ["expense_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_items_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -412,37 +478,37 @@ export type Database = {
       transactions: {
         Row: {
           created_at: string | null
+          date: string
           description: string | null
           id: string
-          reference_id: string | null
-          reference_type: string | null
-          transaction_date: string
-          user_id: string | null
+          total_amount: number
+          user_id: string
+          vendor_id: string | null
         }
         Insert: {
           created_at?: string | null
+          date: string
           description?: string | null
           id?: string
-          reference_id?: string | null
-          reference_type?: string | null
-          transaction_date: string
-          user_id?: string | null
+          total_amount: number
+          user_id: string
+          vendor_id?: string | null
         }
         Update: {
           created_at?: string | null
+          date?: string
           description?: string | null
           id?: string
-          reference_id?: string | null
-          reference_type?: string | null
-          transaction_date?: string
-          user_id?: string | null
+          total_amount?: number
+          user_id?: string
+          vendor_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "transactions_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "transactions_vendor_id_fkey"
+            columns: ["vendor_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
         ]
@@ -482,8 +548,7 @@ export type Database = {
           id: string
           name: string
           phone: string | null
-          updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           address?: string | null
@@ -492,8 +557,7 @@ export type Database = {
           id?: string
           name: string
           phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           address?: string | null
@@ -502,28 +566,38 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "vendors_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      copy_default_accounts_for_user: {
+        Args: Record<PropertyKey, never> | { target_user_id: string }
+        Returns: undefined
+      }
+      create_expense_transaction: {
+        Args: {
+          items: Json
+          payment_account_id: string
+          transaction_date: string
+          transaction_description: string
+          vendor_name: string
+        }
+        Returns: string
+      }
     }
     Enums: {
-      [_ in never]: never
+      account_type:
+        | "asset"
+        | "liability"
+        | "equity"
+        | "revenue"
+        | "cogs"
+        | "expense"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -650,6 +724,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      account_type: [
+        "asset",
+        "liability",
+        "equity",
+        "revenue",
+        "cogs",
+        "expense",
+      ],
+    },
   },
 } as const
