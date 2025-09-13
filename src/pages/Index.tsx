@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, FileText, DollarSign, TrendingUp, Users } from "lucide-react";
+import { Plus, Search, FileText, DollarSign, TrendingUp, Users, BarChart3, CreditCard, History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { FinancialOverview } from "@/components/FinancialOverview";
 import { RecentTransactions } from "@/components/RecentTransactions";
 import { InvoiceModal } from "@/components/InvoiceModal";
@@ -10,6 +11,7 @@ import { TransactionModal } from "@/components/TransactionModal";
 import { formatCurrency } from "@/lib/utils";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
 
@@ -76,13 +78,13 @@ const Index = () => {
                 </Button>
                 
                 <Button 
+                  onClick={() => navigate("/payments")}
                   variant="outline" 
-                  onClick={() => setShowTransactionModal(true)}
                   className="flex-1 sm:flex-initial gap-2 border-border hover:bg-accent"
                 >
                   <Plus className="h-4 w-4" />
-                  <span className="hidden sm:inline">Add Transaction</span>
-                  <span className="sm:hidden">Transaction</span>
+                  <span className="hidden sm:inline">Record Payment</span>
+                  <span className="sm:hidden">Payment</span>
                 </Button>
               </div>
             </div>
@@ -92,6 +94,77 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-8">
+        {/* Navigation Cards */}
+        <div className="mb-6 sm:mb-8 grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+          <Card 
+            className="border-border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+            onClick={() => navigate("/accounts")}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="p-2 sm:p-3 rounded-lg bg-primary/10">
+                  <BarChart3 className="h-4 w-4 sm:h-6 sm:w-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-card-foreground">Accounts</h3>
+                  <p className="text-xs text-muted-foreground">Chart of accounts</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+            onClick={() => navigate("/reports")}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="p-2 sm:p-3 rounded-lg bg-success/10">
+                  <FileText className="h-4 w-4 sm:h-6 sm:w-6 text-success" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-card-foreground">Reports</h3>
+                  <p className="text-xs text-muted-foreground">Financial reports</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+            onClick={() => navigate("/payments")}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="p-2 sm:p-3 rounded-lg bg-warning/10">
+                  <CreditCard className="h-4 w-4 sm:h-6 sm:w-6 text-warning" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-card-foreground">Payments</h3>
+                  <p className="text-xs text-muted-foreground">Payment tracking</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card 
+            className="border-border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+            onClick={() => navigate("/audit-logs")}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="p-2 sm:p-3 rounded-lg bg-danger/10">
+                  <History className="h-4 w-4 sm:h-6 sm:w-6 text-danger" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-card-foreground">Audit Logs</h3>
+                  <p className="text-xs text-muted-foreground">Activity history</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Stats Cards */}
         <div className="mb-6 sm:mb-8 grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
           {stats.map((stat) => {

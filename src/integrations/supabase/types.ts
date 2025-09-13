@@ -579,6 +579,10 @@ export type Database = {
         Args: Record<PropertyKey, never> | { target_user_id: string }
         Returns: undefined
       }
+      create_bill_with_journal_entries: {
+        Args: { bill_data: Json; line_items: Json; vendor_id: string }
+        Returns: string
+      }
       create_expense_transaction: {
         Args: {
           items: Json
@@ -587,6 +591,24 @@ export type Database = {
           transaction_description: string
           vendor_name: string
         }
+        Returns: string
+      }
+      create_invoice_with_journal_entries: {
+        Args: { customer_id: string; invoice_data: Json; line_items: Json }
+        Returns: string
+      }
+      get_account_balances: {
+        Args: { account_type_filter?: string }
+        Returns: {
+          account_code: string
+          account_id: string
+          account_name: string
+          account_type: string
+          balance: number
+        }[]
+      }
+      process_payment_with_journal_entries: {
+        Args: { payment_data: Json }
         Returns: string
       }
     }
